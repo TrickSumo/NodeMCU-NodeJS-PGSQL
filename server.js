@@ -53,7 +53,8 @@ wss.on("connection", (ws) => {
 });
 
 // Insert data into PostgreSQL
-app.post("/postData", express.json(), async (req, res) => {
+app.post("/postData", express.urlencoded({ extended: true }), async (req, res) => {
+    console.log("Received data:", req.body);
     const { temperature, humidity } = req.body;
     const date = new Date().toISOString().split("T")[0];
     const time = new Date().toISOString().split("T")[1].split(".")[0];
