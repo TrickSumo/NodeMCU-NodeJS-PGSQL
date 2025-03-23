@@ -22,7 +22,7 @@ async function createTableIfNotExists() {
         CREATE TABLE IF NOT EXISTS nodemcu_table (
             id SERIAL PRIMARY KEY,
             temperature FLOAT NOT NULL,
-            val2 FLOAT NOT NULL,
+            humidity FLOAT NOT NULL,
             date DATE NOT NULL,
             time TIME NOT NULL
         );
@@ -54,14 +54,14 @@ wss.on("connection", (ws) => {
 
 // Insert data into PostgreSQL
 app.post("/postData", express.json(), async (req, res) => {
-    const { temperature, val2 } = req.body;
+    const { temperature, humidity } = req.body;
     const date = new Date().toISOString().split("T")[0];
     const time = new Date().toISOString().split("T")[1].split(".")[0];
 
     try {
         const result = await pool.query(
-            "INSERT INTO nodemcu_table (temperature, val2, date, time) VALUES ($1, $2, $3, $4) RETURNING *",
-            [temperature, val2, date, time]
+            "INSERT INTO nodemcu_table (temperature, humidity, date, time) VALUES ($1, $2, $3, $4) RETURNING *",
+            [temperature, humidity, date, time]
         );
 
         console.log("Inserted data:", result.rows[0]);
